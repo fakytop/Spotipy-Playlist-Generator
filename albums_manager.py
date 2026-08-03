@@ -20,7 +20,7 @@ def get_all_albums_from_artist(artist,sp):
     total_albums = 0
     albums = []
     while (offset == 0 and total_albums == 0) or offset < total_albums:
-        response = sp.artist_albums(artist_id = artist["artist_id"],include_groups="album,single",country="UY",offset=offset,limit=50)
+        response = sp.artist_albums(artist_id = artist["artist_id"],include_groups="single",country="UY",offset=offset,limit=50)
         if total_albums == 0:
             total_albums = response["total"]
             print(f"ℹ️ Total de albums encontrados: {total_albums}")

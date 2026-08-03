@@ -129,12 +129,16 @@ def get_average_pop_artists(artists,artistsSong):
 def calculate_score(tracks_info,artists,boost,decay_rate,weight_art,pwr_bonus):
     for track in tracks_info:
         avg_pop_artist = get_average_pop_artists(artists,track["artists"])
+        track["avg_pop_artist"] = avg_pop_artist
         if track["album_release_prec"] == "day":
             release_date = datetime.strptime(track["album_release_date"],"%Y-%m-%d").date()
         else:
             release_date = datetime.strptime(track["album_release_date"],"%Y").date()
         diff_days = (date.today() - release_date).days
-        score = track["popularity"] * multiplier_time(diff_days,boost,decay_rate) * multiplier_artist(avg_pop_artist,weight_art) * bonus_artist(pwr_bonus,avg_pop_artist,diff_days)
+        base_pop = track["popularity"]
+        if base_pop == 0:
+            base_pop = max(5,avg_pop_artist*0.2)
+        score = base_pop * multiplier_time(diff_days,boost,decay_rate) * multiplier_artist(avg_pop_artist,weight_art) * bonus_artist(pwr_bonus,avg_pop_artist,diff_days)
         track["score"] = score
         print(f"   🎵 {track['name'][:40]:<40} score: {score:.2f}  (hace {diff_days}d, pop. artista: {avg_pop_artist:.0f})")
 
